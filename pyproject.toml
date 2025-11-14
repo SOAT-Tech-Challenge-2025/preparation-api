@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "soat-preparation-api"
+version = "0.1.0"
+description = "The preparation API service for Soat Tech Challenge"
+authors = ["Lucas Martins Barroso <lucasmartins.av@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "preparation_api" }]
+
+[tool.poetry.dependencies]
+python = "^3.14"
+pydantic = { extras = ["email"], version = "^2.12.3" }
+pydantic-settings = "^2.11.0"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.3.0"
+pytest = "^8.4.2"
+pytest-cov = "^7.0.0"
+pytest-mock = "^3.15.1"
+pytest-asyncio = "^1.2.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
