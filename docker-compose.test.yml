@@ -1,0 +1,36 @@
+services:
+  test_db:
+    image: postgres:17.6-alpine
+    container_name: preparation-api-test-database
+    restart: always
+    env_file:
+      - ./docker-compose-env/test_database.env
+    volumes:
+      - db-dev-data:/var/lib/postgresql/data
+    networks:
+      - soat-preparation
+
+  api:
+    container_name: preparation-api
+    image: preparation-api:dev
+    restart: none
+    build:
+      context: .
+      target: development
+    entrypoint: ["tail", "-f", "/dev/null"]
+    volumes:
+      - ./settings:/app/settings
+    depends_on:
+      - test_db
+    env_file:
+      - ./docker-compose-env/app.env
+    networks:
+      - soat-preparation
+
+volumes:
+  db-data:
+  db-dev-data:
+
+networks:
+  soat-preparation:
+    driver: bridge

@@ -1,0 +1,66 @@
+services:
+  db:
+    image: postgres:17.6-alpine
+    container_name: preparation-api-database
+    restart: always
+    env_file:
+      - ./docker-compose-env/database.env
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    expose:
+      - "5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - soat-preparation
+
+  test_db:
+    image: postgres:17.6-alpine
+    container_name: preparation-api-test-database
+    restart: always
+    env_file:
+      - ./docker-compose-env/test_database.env
+    ports:
+      - ${POSTGRES_TEST_PORT:-5433}:5432
+    expose:
+      - "5432"
+    volumes:
+      - db-dev-data:/var/lib/postgresql/data
+    networks:
+      - soat-preparation
+
+  api:
+    container_name: preparation-api
+    image: preparation-api:dev
+    restart: always
+    expose:
+      - 8000
+    build:
+      context: .
+      target: development
+    ports:
+      - ${PREPARATION_API_HTTP_PORT:-8000}:8000
+    entrypoint: ["sh", "/app/docker-entrypoint/start_dev_api.sh"]
+    volumes:
+      - ./preparation_api:/app/preparation_api
+      - ./tests:/app/tests
+      - ./docker-entrypoint:/app/docker-entrypoint
+      # - ./alembic.ini:/app/alembic.ini
+      - ./logging.ini:/app/logging.ini
+      - ./pytest.ini:/app/pytest.ini
+      - ./.coveragerc:/app/.coveragerc
+      - ./settings:/app/settings
+    depends_on:
+      - db
+    env_file:
+      - ./docker-compose-env/app.env
+    networks:
+      - soat-preparation
+
+volumes:
+  db-data:
+  db-dev-data:
+
+networks:
+  soat-preparation:
+    driver: bridge

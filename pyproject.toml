@@ -10,6 +10,11 @@ packages = [{ include = "preparation_api" }]
 python = "^3.14"
 pydantic = { extras = ["email"], version = "^2.12.3" }
 pydantic-settings = "^2.11.0"
+sqlalchemy = "^2.0.44"
+asyncpg = "^0.30.0"
+uvicorn = "^0.38.0"
+gunicorn = "^23.0.0"
+fastapi = "^0.121.2"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.3.0"

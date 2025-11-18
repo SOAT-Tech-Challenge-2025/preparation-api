@@ -1,0 +1,6 @@
+[run]
+relative_files = true
+source = payment_api
+
+[xml]
+output = coverage.xml
