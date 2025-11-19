@@ -1,4 +1,4 @@
-"""Entrypoint module for the Payment API application"""
+"""Entrypoint module for the Preparation API application"""
 
 import logging
 from contextlib import asynccontextmanager
