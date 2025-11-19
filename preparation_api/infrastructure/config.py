@@ -38,16 +38,6 @@ class TestDatabaseSettings(BaseSettings):
     ECHO: bool = False
 
 
-class HTTPClientSettings(BaseSettings):
-    """HTTP Client specific settings"""
-
-    model_config = SettingsConfigDict(
-        env_file="settings/http_client.env", env_file_encoding="utf-8"
-    )
-
-    TIMEOUT: float = 10.0  # seconds
-
-
 class OrderAPISettings(BaseSettings):
     """Order API specific settings"""
 
@@ -56,3 +46,4 @@ class OrderAPISettings(BaseSettings):
     )
 
     BASE_URL: str
+    TIMEOUT: float = 10.0  # seconds

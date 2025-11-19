@@ -17,13 +17,14 @@ class APIOrderInfoProvider(OrderInfoProvider):
 
     def __init__(self, settings: OrderAPISettings, http_client: AsyncClient):
         self.base_url = settings.BASE_URL
+        self.timeout = settings.TIMEOUT
         self.http_client = http_client
 
     async def get(self, order_id: str) -> OrderInfo:
         url = f"{self.base_url}/order/{order_id}"
         err_prefix = f"[GET] {url} - Failed to make GET request to Order API: "
         try:
-            response = await self.http_client.get(url)
+            response = await self.http_client.get(url, timeout=self.timeout)
             logger.debug("Response %s %s -> %s", "GET", url, response.status_code)
             response.raise_for_status()
         except (HTTPStatusError, HTTPError) as exc:

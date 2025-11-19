@@ -16,6 +16,7 @@ def order_api_settings(mocker: MockerFixture):
     """Fixture to create a mock OrderAPISettings for testing"""
     mock_settings = mocker.Mock()
     mock_settings.BASE_URL = "http://order-api.service.local"
+    mock_settings.TIMEOUT = 15.0
     return mock_settings
 
 
@@ -60,7 +61,7 @@ async def test_should_get_order_info_when_order_api_responds_successfully(
     expected_order_info = OrderInfo(order_id=order_id, preparation_time=10)
     assert order_info == expected_order_info
     client.http_client.get.assert_awaited_once_with(
-        f"{client.base_url}/order/{order_id}"
+        f"{client.base_url}/order/{order_id}", timeout=15.0
     )
 
 
@@ -90,5 +91,5 @@ async def test_should_raise_order_info_provider_error_when_order_api_responds_wi
 
     assert "Failed to make GET request to Order API" in str(exc_info.value)
     client.http_client.get.assert_awaited_once_with(
-        f"{client.base_url}/order/{order_id}"
+        f"{client.base_url}/order/{order_id}", timeout=15.0
     )

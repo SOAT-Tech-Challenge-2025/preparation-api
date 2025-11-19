@@ -10,7 +10,6 @@ from preparation_api.adapters.out import APIOrderInfoProvider
 from preparation_api.domain.ports import OrderInfoProvider
 from preparation_api.infrastructure.config import (
     DatabaseSettings,
-    HTTPClientSettings,
     OrderAPISettings,
 )
 from preparation_api.infrastructure.orm import SessionManager
@@ -31,9 +30,9 @@ async def get_db_session(
         yield session
 
 
-def get_http_client(settings: HTTPClientSettings) -> AsyncClient:
+def get_http_client() -> AsyncClient:
     """Return an AsyncClient instance"""
-    return AsyncClient(timeout=settings.TIMEOUT)
+    return AsyncClient(timeout=10.0)  # Default timeout of 10 seconds
 
 
 def get_order_info_provider(
