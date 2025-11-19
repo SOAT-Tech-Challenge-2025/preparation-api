@@ -36,3 +36,23 @@ class TestDatabaseSettings(BaseSettings):
 
     DSN: str
     ECHO: bool = False
+
+
+class HTTPClientSettings(BaseSettings):
+    """HTTP Client specific settings"""
+
+    model_config = SettingsConfigDict(
+        env_file="settings/http_client.env", env_file_encoding="utf-8"
+    )
+
+    TIMEOUT: float = 10.0  # seconds
+
+
+class OrderAPISettings(BaseSettings):
+    """Order API specific settings"""
+
+    model_config = SettingsConfigDict(
+        env_file="settings/order_api.env", env_file_encoding="utf-8"
+    )
+
+    BASE_URL: str

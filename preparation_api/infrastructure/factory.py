@@ -3,9 +3,16 @@
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
+from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from preparation_api.infrastructure.config import DatabaseSettings
+from preparation_api.adapters.out import APIOrderInfoProvider
+from preparation_api.domain.ports import OrderInfoProvider
+from preparation_api.infrastructure.config import (
+    DatabaseSettings,
+    HTTPClientSettings,
+    OrderAPISettings,
+)
 from preparation_api.infrastructure.orm import SessionManager
 
 
@@ -22,3 +29,16 @@ async def get_db_session(
 
     async with session_manager.session() as session:
         yield session
+
+
+def get_http_client(settings: HTTPClientSettings) -> AsyncClient:
+    """Return an AsyncClient instance"""
+    return AsyncClient(timeout=settings.TIMEOUT)
+
+
+def get_order_info_provider(
+    settings: OrderAPISettings,
+    http_client: AsyncClient,
+) -> OrderInfoProvider:
+    """Return an OrderInfoProvider instance"""
+    return APIOrderInfoProvider(settings=settings, http_client=http_client)

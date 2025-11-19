@@ -22,3 +22,12 @@ class PersistenceError(DomainException):
         self, message="An error occurred while trying to persist or retrieve data"
     ):
         super().__init__(message)
+
+
+class OrderInfoProviderError(DomainException):
+    """If an error occurs trying to fetch order information"""
+
+    def __init__(
+        self, message="An error occurred while trying to fetch order information"
+    ):
+        super().__init__(message)
