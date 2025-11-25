@@ -57,6 +57,22 @@ services:
     networks:
       - soat-preparation
 
+  payment-closed-listener:
+    container_name: payment-closed-listener
+    image: preparation-api:dev
+    restart: always
+    entrypoint:
+      ["sh", "/app/docker-entrypoint/start_payment_closed_listener.sh"]
+    volumes:
+      - ./preparation_api:/app/preparation_api
+      - ./docker-entrypoint:/app/docker-entrypoint
+      - ./logging.ini:/app/logging.ini
+      - ./settings:/app/settings
+    depends_on:
+      - db
+    networks:
+      - soat-preparation
+
 volumes:
   db-data:
   db-dev-data:
