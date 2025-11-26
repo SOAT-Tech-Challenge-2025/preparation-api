@@ -5,6 +5,9 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from preparation_api.adapters.inbound.rest.v1.router import (
+    router as preparation_router_v1,
+)
 from preparation_api.infrastructure import factory
 from preparation_api.infrastructure.config import (
     APPSettings,
@@ -19,8 +22,8 @@ def create_api() -> FastAPI:
 
     logger.info("Creating FastAPI application instance")
     app_instance = FastAPI(lifespan=fastapi_lifespan)
-    # logger.info("Including preparation router v1")
-    # app_instance.include_router(preparation_router_v1)
+    logger.info("Including preparation router v1")
+    app_instance.include_router(preparation_router_v1)
     return app_instance
 
 

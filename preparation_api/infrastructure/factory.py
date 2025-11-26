@@ -12,7 +12,13 @@ from preparation_api.adapters.inbound.listeners import (
     PaymentClosedListener,
 )
 from preparation_api.adapters.out import APIOrderInfoProvider, SAPreparationRepository
-from preparation_api.application.use_cases import CreatePreparationFromPaymentUseCase
+from preparation_api.application.use_cases import (
+    CreatePreparationFromPaymentUseCase,
+    GetWaitingListUseCase,
+    MarkPreparationAsCompletedUseCase,
+    MarkPreparationAsReadyUseCase,
+    StartNextPreparationUseCase,
+)
 from preparation_api.domain.ports import OrderInfoProvider, PreparationRepository
 from preparation_api.infrastructure.config import (
     AWSSettings,
@@ -80,6 +86,40 @@ def get_create_preparation_from_payment_use_case(
     return CreatePreparationFromPaymentUseCase(
         preparation_repository=preparation_repository,
         order_info_provider=order_info_provider,
+    )
+
+
+def get_waiting_list_use_case(
+    preparation_repository: PreparationRepository,
+) -> GetWaitingListUseCase:
+    """Return a GetWaitingListUseCase instance"""
+
+    return GetWaitingListUseCase(preparation_repository=preparation_repository)
+
+
+def get_start_next_preparation_use_case(
+    preparation_repository: PreparationRepository,
+) -> StartNextPreparationUseCase:
+    """Return a StartNextPreparationUseCase instance"""
+
+    return StartNextPreparationUseCase(preparation_repository=preparation_repository)
+
+
+def get_mark_preparation_as_ready_use_case(
+    preparation_repository: PreparationRepository,
+) -> MarkPreparationAsReadyUseCase:
+    """Return a MarkPreparationAsReadyUseCase instance"""
+
+    return MarkPreparationAsReadyUseCase(preparation_repository=preparation_repository)
+
+
+def get_mark_preparation_as_completed_use_case(
+    preparation_repository: PreparationRepository,
+) -> MarkPreparationAsCompletedUseCase:
+    """Return a MarkPreparationAsCompletedUseCase instance"""
+
+    return MarkPreparationAsCompletedUseCase(
+        preparation_repository=preparation_repository
     )
 
 
