@@ -45,7 +45,7 @@ services:
       - ./preparation_api:/app/preparation_api
       - ./tests:/app/tests
       - ./docker-entrypoint:/app/docker-entrypoint
-      # - ./alembic.ini:/app/alembic.ini
+      - ./alembic.ini:/app/alembic.ini
       - ./logging.ini:/app/logging.ini
       - ./pytest.ini:/app/pytest.ini
       - ./.coveragerc:/app/.coveragerc
