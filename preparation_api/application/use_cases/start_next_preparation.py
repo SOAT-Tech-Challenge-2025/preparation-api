@@ -1,7 +1,7 @@
 """Use case to start the next preparation"""
 
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 
 from preparation_api.domain.entities import PreparationIn, PreparationOut
 from preparation_api.domain.exceptions import NotFound
@@ -40,7 +40,7 @@ class StartNextPreparationUseCase:
         old_preparation_position = preparation_out.preparation_position
 
         # Calculate the estimated datetime to the preparation be ready
-        estimated_ready_time = datetime.now(timezone.utc) + timedelta(
+        estimated_ready_time = datetime.now() + timedelta(
             minutes=preparation_out.preparation_time
         )
 
