@@ -2,7 +2,7 @@
 
 """Unit tests for StartNextPreparationUseCase"""
 
-from datetime import datetime, timezone
+from datetime import datetime
 
 import pytest
 from freezegun import freeze_time
@@ -55,7 +55,7 @@ async def test_should_start_next_preparation_when_received_preparation_exists(
         id="A123",
         preparation_position=None,
         preparation_time=15,
-        estimated_ready_time=datetime(2024, 1, 1, 12, 15, 0, tzinfo=timezone.utc),
+        estimated_ready_time=datetime(2024, 1, 1, 12, 15, 0),
         preparation_status=PreparationStatus.IN_PREPARATION,
     )
 
