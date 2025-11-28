@@ -1,0 +1,115 @@
+name: CI / CD Pipeline
+on:
+  - push
+  - workflow_dispatch
+
+jobs:
+  test:
+    name: Test Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+        with:
+          version: latest
+
+      - name: Build application for testing
+        run: docker compose -f docker-compose.test.yml build --no-cache api
+
+      - name: Pull test database image
+        run: docker compose -f docker-compose.test.yml pull test_db
+
+      - name: Create DB env file
+        run: |
+          cat << EOF > docker-compose-env/test_database.env
+          POSTGRES_USER=postgres
+          POSTGRES_PASSWORD=12345
+          POSTGRES_DB=postgres
+          EOF
+
+      - name: Create API env file
+        run: touch docker-compose-env/app.env
+
+      - name: Create the testing database configuration file for the application
+        run: |
+          cat << EOF > settings/test_database.env
+          DSN="postgresql+asyncpg://postgres:12345@test_db:5432/postgres"
+          ECHO=True
+          EOF
+
+      - name: Start test services
+        run: docker compose -f docker-compose.test.yml up -d
+
+      - name: Run tests
+        run: docker compose -f docker-compose.test.yml exec api pytest
+
+      - name: Copy coverage report
+        run: docker cp preparation-api:/app/coverage.xml ./coverage.xml
+
+      - name: Destroy test services
+        run: docker compose -f docker-compose.test.yml down -v
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ./coverage.xml
+
+  sonarqube:
+    name: SonarQube
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.repository == 'SOAT-Tech-Challenge-2025/preparation-api'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Download coverage reports
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: ./
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@40f5b61913e891f9d316696628698051136015be
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: SonarQube Quality Gate check
+        uses: SonarSource/sonarqube-quality-gate-action@95b1cc6c02a15c8ecc00c07b1c2a75ed61a14055
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  build_and_push:
+    name: Build and Push Docker Image
+    needs: sonarqube
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Login to ECR
+        uses: docker/login-action@v3
+        with:
+          registry: public.ecr.aws
+          username: ${{ secrets.AWS_ACCESS_KEY }}
+          password: ${{ secrets.AWS_ACCESS_SECRET }}
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: public.ecr.aws/p6c0d2v5/fiap-soat-techchallenge-preparation:latest
+          target: production
