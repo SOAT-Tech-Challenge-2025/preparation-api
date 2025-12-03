@@ -7,7 +7,7 @@ class APPSettings(BaseSettings):
     """APP specific settings"""
 
     model_config = SettingsConfigDict(
-        env_file="settings/app.env", env_file_encoding="utf-8"
+        env_file="settings/app.env", env_file_encoding="utf-8", env_prefix="APP_"
     )
 
     TITLE: str = "SOAT Tech Challenge Preparation Api"
@@ -20,7 +20,9 @@ class DatabaseSettings(BaseSettings):
     """Database specific settings"""
 
     model_config = SettingsConfigDict(
-        env_file="settings/database.env", env_file_encoding="utf-8"
+        env_file="settings/database.env",
+        env_file_encoding="utf-8",
+        env_prefix="DATABASE_",
     )
 
     DSN: str
@@ -42,7 +44,9 @@ class OrderAPISettings(BaseSettings):
     """Order API specific settings"""
 
     model_config = SettingsConfigDict(
-        env_file="settings/order_api.env", env_file_encoding="utf-8"
+        env_file="settings/order_api.env",
+        env_file_encoding="utf-8",
+        env_prefix="ORDER_API_",
     )
 
     BASE_URL: str
@@ -53,7 +57,9 @@ class PaymentClosedListenerSettings(BaseSettings):
     """Payment Closed Listener settings"""
 
     model_config = SettingsConfigDict(
-        env_file="settings/payment_closed_listener.env", env_file_encoding="utf-8"
+        env_file="settings/payment_closed_listener.env",
+        env_file_encoding="utf-8",
+        env_prefix="PAYMENT_CLOSED_LISTENER_",
     )
 
     QUEUE_NAME: str
@@ -66,7 +72,9 @@ class AWSSettings(BaseSettings):
     """AWS integration settings"""
 
     model_config = SettingsConfigDict(
-        env_file="settings/aws.env", env_file_encoding="utf-8"
+        env_file="settings/aws.env",
+        env_file_encoding="utf-8",
+        env_prefix="AWS_",
     )
 
     REGION_NAME: str = "us-east-1"
