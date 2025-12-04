@@ -51,7 +51,7 @@ USER soat
 COPY --chown=${USER_UID}:${USER_UID} ./docker-entrypoint ./docker-entrypoint
 COPY --chown=${USER_UID}:${USER_UID} ./preparation_api ./preparation_api
 COPY --chown=${USER_UID}:${USER_UID} ./logging.ini ./logging.ini
-# COPY --chown=${USER_UID}:${USER_UID} ./alembic.ini ./alembic.ini
+COPY --chown=${USER_UID}:${USER_UID} ./alembic.ini ./alembic.ini
 
 EXPOSE 8000
 
