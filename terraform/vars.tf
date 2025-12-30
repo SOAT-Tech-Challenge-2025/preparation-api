@@ -49,19 +49,9 @@ variable "aws_secret_access_key" {
   sensitive   = true
 }
 
-variable "database_address" {
-  description = "The address of the Postgres instance"
-  sensitive   = true
-}
-
 variable "database_name" {
   description = "The database name in the Postgres instance"
   sensitive   = true
-}
-
-variable "database_port" {
-  description = "The port for the Postgres instance"
-  default     = 5432
 }
 
 variable "database_user" {
